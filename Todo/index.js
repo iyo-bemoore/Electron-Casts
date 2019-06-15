@@ -1,13 +1,16 @@
 const electron = require('electron');
 
-const { app, BrowserWindow , Menu} = electron;
+const { app, BrowserWindow , Menu, ipcMain} = electron;
 
 let mainWindow;
 let addWindow;
 
 app.on('ready', ( ) => {
 
-  mainWindow =  new BrowserWindow({});
+  mainWindow =  new BrowserWindow({ 
+    webPreferences: {
+      nodeIntegration: true
+}});
   mainWindow.loadURL(`file://${__dirname}/main.html`);
   mainWindow.on('closed', () => app.quit());
 
@@ -18,12 +21,24 @@ app.on('ready', ( ) => {
 
 function createAddWindow() {
   addWindow = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true
+    },
     width : 300,
     height: 200,
     title : "Add New Todo"
   });
-  addWindow.loadURL(`file://${__dirname}/add.html`)
-}
+  addWindow.loadURL(`file://${__dirname}/add.html`);
+  // garbage collection
+  addWindow.on('closed', () => {
+    addWindow = null;
+  })
+};
+
+ipcMain.on('todo:add', (event, todo ) => {
+   mainWindow.webContents.send('todo:add',todo);
+   addWindow.close();
+});
 
 
 const menuTemplate = [
@@ -46,3 +61,17 @@ const menuTemplate = [
     ]
   }
 ];
+
+if( process.env.NODE_ENV !== 'production' ) {
+  menuTemplate.push({
+    label: 'Developer',
+    submenu : [
+      {
+       label: 'Toggle Developer Tools',
+       click(item, focussedWindow) {
+           focussedWindow.toggleDevTools(); 
+       } 
+      }
+    ]
+  }) 
+}
