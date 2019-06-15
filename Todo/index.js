@@ -1,5 +1,4 @@
 const electron = require('electron');
-
 const { app, BrowserWindow , Menu, ipcMain} = electron;
 
 let mainWindow;
@@ -50,6 +49,11 @@ const menuTemplate = [
         click() {
           createAddWindow()
         } 
+      },{
+        label: "Clear Todos",
+        click() {
+          mainWindow.webContents.send('todo:clear');
+        }
       },
       {
         label: "Quit",
@@ -66,6 +70,9 @@ if( process.env.NODE_ENV !== 'production' ) {
   menuTemplate.push({
     label: 'Developer',
     submenu : [
+      {
+        role: 'reload'
+      },
       {
        label: 'Toggle Developer Tools',
        click(item, focussedWindow) {
