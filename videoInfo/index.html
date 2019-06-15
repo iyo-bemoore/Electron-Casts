@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Video Info</title>
+</head>
+<body>
+    <h1> Video Info </h1>
+    <form>
+        <div>
+            <label for="">Select a video </label>
+            <input type="file" accept="video/*"/>
+        </div>
+        <button type="submit"> Get info </button>
+    </form>
+    <h1 id=result></h1>
+ <script>
+// require works only because running inside a node environment 
+const electron = require('electron');
+// pull the IPC from electron 
+const { ipcRenderer } = electron;
+     
+ document.querySelector('form').addEventListener('submit', (event) => {
+     event.preventDefault();
+     // pull the first file in the array
+     // destructure the path from the file object 
+     const { path } = document.querySelector('input').files[0];
+     
+     // event to send to the  renderer, vide:submit event name is free to choose.
+     // receives the path
+     ipcRenderer.send('video:submit',path);
+ });
+
+ ipcRenderer.on('video:metadata', (event, duration) => {
+     document.getElementById('result').innerHTML = `Video is ${duration} seconds`;
+ });
+ 
+ </script>   
+</body>
+</html>
