@@ -15,12 +15,10 @@ class MainWindow extends BrowserWindow {
             show: false,
         });
         this.on('blur', this.onBlur.bind(this)); 
-     }
-
+     };
      onBlur(){
          this.hide();
-     }
-
+     };
 }
 
 module.exports = MainWindow
