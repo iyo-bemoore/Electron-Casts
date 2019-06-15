@@ -1,28 +1,17 @@
 const path = require('path');
 const electron = require('electron');
-const { app, BrowserWindow, Tray } = electron;
+const { app, BrowserWindow } = electron;
 const TimerTray = require('./app/TimerTray');
+const MainWindow = require('./app/MainWindow');
 
 
 let mainWindow;
-let tray;
-
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({
-        webPreferences: {
-            nodeIntegration: true
-        },
-        height: 500,
-        width: 300,
-        frame: false,
-        resizable: false,
-        show: false,
-    });
+    //app.dock.hide();
+    mainWindow = new MainWindow();
     mainWindow.loadURL(`file://${__dirname}/src/index.html`)
-
+    
     const iconName = process.platform === 'win32' || 'linux' ? 'windows-icon.png' : 'iconTemplate.png';
     const iconPath = path.join(__dirname, `./src/assets/${iconName}`);
-
-    tray = new TimerTray(iconPath,mainWindow);
-        
-})
+    const  tray = new TimerTray(iconPath,mainWindow);
+});
