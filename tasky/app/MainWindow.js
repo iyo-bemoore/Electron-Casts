@@ -6,7 +6,9 @@ class MainWindow extends BrowserWindow {
      constructor(){
          super({
             webPreferences: {
-                nodeIntegration: true
+                nodeIntegration: true,
+                // page will run at full speed when blurred, 
+                backgroundThrottling : false
             },
             height: 500,
             width: 300,

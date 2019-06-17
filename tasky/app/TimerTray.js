@@ -27,7 +27,6 @@ class TimerTray extends Tray {
             this.mainWindow.show();
         }
     };
-
     onRightClick() {
         const menuConfig = Menu.buildFromTemplate([
             {

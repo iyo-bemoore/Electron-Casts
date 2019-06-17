@@ -8,7 +8,7 @@ const TimerTray = require('./app/TimerTray');
 const MainWindow = require('./app/MainWindow');
 
 
-
+let tray;
 let mainWindow;
 app.on('ready', () => {
     //app.dock.hide();
@@ -17,9 +17,9 @@ app.on('ready', () => {
     
     const iconName = process.platform === 'win32' || 'linux' ? 'windows-icon.png' : 'iconTemplate.png';
     const iconPath = path.join(__dirname, `./src/assets/${iconName}`);
-    const  tray = new TimerTray(iconPath,mainWindow);
+      tray = new TimerTray(iconPath,mainWindow);
 });
 
 ipcMain.on('update-timer', (event, timeLeft) => {
-    
+    tray.setTitle(timeLeft);
 })
